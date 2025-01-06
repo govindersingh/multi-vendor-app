@@ -5,9 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\Role;
 use App\Models\Merchant;
 use App\Models\Vendor;
+use Spatie\Permission\Models\Role;
 
 class VendorSeeder extends Seeder
 {
@@ -19,13 +19,11 @@ class VendorSeeder extends Seeder
         $merchants = Merchant::all();
 
         foreach ($merchants as $merchant) {
-            for ($i = 1; $i <= 2; $i++) {
-                Vendor::create([
-                    'user_id' => User::factory()->create(['role_id' => Role::where('name', 'Vendor')->first()->id])->id,
-                    'merchant_id' => $merchant->id,
-                    'store_name' => 'Vendor Store ' . $i,
-                ]);
-            }
+            Vendor::create([
+                'user_id' => User::factory()->create(['role_id' => Role::where('name', 'vendor')->first()->id])->id,
+                'merchant_id' => $merchant->id,
+                'store_name' => 'Vendor Store',
+            ]);
         }
     }
 }

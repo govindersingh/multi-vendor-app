@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Merchant;
+use Spatie\Permission\Models\Role;
 
 class MerchantSeeder extends Seeder
 {
@@ -14,11 +15,10 @@ class MerchantSeeder extends Seeder
      */
     public function run(): void
     {
-        $merchantUsers = User::whereHas('role', function ($query) {
-            $query->where('name', 'Merchant');
-        })->get();
+        $merchantRole = Role::where('name', 'merchant')->first();
+        $usersWithMerchantRole = User::where('role_id', $merchantRole->id)->get();
 
-        foreach ($merchantUsers as $user) {
+        foreach ($usersWithMerchantRole as $user) {
             Merchant::create([
                 'user_id' => $user->id,
                 'business_name' => $user->name . "'s Business",
