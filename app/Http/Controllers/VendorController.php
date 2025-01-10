@@ -8,15 +8,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
+use App\Enums\UserType;
+use Yajra\DataTables\Facades\DataTables;
 
 class VendorController extends Controller
 {
     public function index(){
-        $vendors = User::role();
-        dd($vendors);
-        return view('pages.clients.index', compact(
-            'vendors'
-        ));
+        //-Check permission.
+        if(auth()->user()->role_id != UserType::VENDOR->value){
+            notify()->preset('access-denied');
+            return redirect()->route('dashboard');
+        }
+        
+        return view('pages.vendor.index');
     }
 }

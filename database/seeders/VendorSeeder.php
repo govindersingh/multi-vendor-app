@@ -20,7 +20,7 @@ class VendorSeeder extends Seeder
 
         foreach ($merchants as $merchant) {
             Vendor::create([
-                'user_id' => User::factory()->create(['role_id' => Role::where('name', 'vendor')->first()->id])->id,
+                'user_id' => Role::where('name', 'vendor')->first()->id,
                 'merchant_id' => $merchant->id,
                 'store_name' => 'Vendor Store',
             ]);

@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
 use App\Models\User;
 
 class UserSeeder extends Seeder
@@ -18,12 +19,15 @@ class UserSeeder extends Seeder
         $roles = Role::all();
 
         foreach ($roles as $key => $role) {
-            User::create([
+            $user = User::create([
                 'email' => strtolower($role->name) . '@example.com',
+                'email_verified_at' => now(),
                 'password' => Hash::make('password'),
+                'remember_token' => Str::random(10),
                 'name' => $role->name . ' User',
                 'role_id' => $role->id,
             ]);
+            $user->assignRole($role->name);
         }
     }
 }
